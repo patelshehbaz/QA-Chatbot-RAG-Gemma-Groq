@@ -10,6 +10,7 @@ from langchain_community.document_loaders import PyPDFDirectoryLoader
 from langchain_google_genai import GoogleGenerativeAIEmbeddings
 from dotenv import load_dotenv
 import os
+import time
 load_dotenv()
 
 ## load the GROQ And OpenAI API KEY 
@@ -19,7 +20,7 @@ os.environ["GOOGLE_API_KEY"]=os.getenv("GOOGLE_API_KEY")
 st.title("Gemma Model Document Q&A")
 
 llm=ChatGroq(groq_api_key=groq_api_key,
-             model_name="Llama3-8b-8192")
+             model_name="Gemma-7b-It")
 
 prompt=ChatPromptTemplate.from_template(
 """
@@ -45,19 +46,12 @@ def vector_embedding():
         st.session_state.vectors=FAISS.from_documents(st.session_state.final_documents,st.session_state.embeddings) #vector OpenAI embeddings
 
 
-
-
-
 prompt1=st.text_input("Enter Your Question From Documents")
 
 
 if st.button("Documents Embedding"):
     vector_embedding()
     st.write("Vector Store DB Is Ready")
-
-import time
-
-
 
 if prompt1:
     document_chain=create_stuff_documents_chain(llm,prompt)
